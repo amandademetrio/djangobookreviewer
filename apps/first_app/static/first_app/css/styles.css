@@ -1,0 +1,14 @@
+.red {
+    color: red
+}
+
+.row {
+    margin-top:2%; 
+    margin-bottom: 2%
+}
+
+#website_logo {
+    height: 50px;
+    display: inline-block
+}
+
