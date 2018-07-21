@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Book Reviews</title>
+    <!-- Botstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#"><img src="{% static 'first_app/images/summer.png' %}" alt="Website Logo" id="website_logo"/>
+            <span class="ml-3">The Book Reviewer</span></a>
+            <ul class="navbar-nav mr-auto"></ul>
+            <a href="/" class="btn btn-light my-2 my-sm-0 mr-2" type="submit">Home</a>
+            <a href="/logout" class="btn btn-light my-2 my-sm-0" type="submit">Logout</a>
+        </nav>
+
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>{{book.name}}</h3>
+                <h6 class="text-muted">Author: {{book.author.name}}</h6>
+            </div>
+        </div>
+
+        <div class="row">
+            <div class="col-sm-7">
+                <h3>Reviews</h3>
+                <!-- Review card -->
+                {% for review in reviews reversed %}
+                <div class="card mb-3">
+                    <div class="card-body">
+                        {% if review.ratings == 5%}
+                        <p>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                        </p>
+                        {% endif %}
+                        {% if review.ratings == 4%}
+                        <p>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_border</i>
+                        </p>
+                        {% endif %}
+                        {% if review.ratings == 3%}
+                        <p>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_border</i>
+                            <i class="material-icons">star_border</i>
+                        </p>
+                        {% endif %}
+                        {% if review.ratings == 2%}
+                        <p>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_border</i>
+                            <i class="material-icons">star_border</i>
+                            <i class="material-icons">star_border</i>
+                        </p>
+                        {% endif %}
+                        {% if review.ratings == 1%}
+                        <p>
+                            <i class="material-icons">star</i>
+                            <i class="material-icons">star_border</i>
+                            <i class="material-icons">star_border</i>
+                            <i class="material-icons">star_border</i>
+                            <i class="material-icons">star_border</i>
+                        </p>
+                        {% endif %}
+                        <p class="card-text"><a href="/users/{{review.commentator.id}}">{{review.commentator.first_name}}</a> says: "{{review.content}}"</p>
+                        <small class="text-muted">Posted on {{review.created_at}}</small>
+                        {% if request.session.user_id == review.commentator.id %}
+                        <small class="float-right">(<a href="/">Delete</a>)</small>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endfor %}
+                <!-- End of review card -->
+            </div>
+            <div class="col-sm-5">
+                <h3>Add Review</h3>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="red">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                <form action='/processaddreview' method='post'>
+                {% csrf_token %}
+                    <div class="form-group">
+                        <textarea class="form-control" name="book_review" rows="3"></textarea>
+                    </div>
+                    <div class="form-group form-inline">
+                        <h6>Rating (in stars)</h6>
+                        <select name="ratings" class="form-control mx-2">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+
+                    <input type="hidden" name="related_book" value="{{book.id}}">
+
+                    <input type="submit" value="Add" class="btn btn-primary float-right">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

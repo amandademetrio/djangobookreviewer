@@ -2,11 +2,14 @@
 <html>
 <head>
     <meta charset="utf-8" />
-    <title>Login and Registration</title>
+    <title>Book Reviews</title>
     <!-- Botstrap -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
     {% load staticfiles %}
     <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
 </head>
 <body>
     <div class="container">
@@ -15,15 +18,85 @@
             <a class="navbar-brand" href="#"><img src="{% static 'first_app/images/summer.png' %}" alt="Website Logo" id="website_logo"/>
             <span class="ml-3">The Book Reviewer</span></a>
             <ul class="navbar-nav mr-auto"></ul>
+            <a href="/books/add" class="btn btn-light my-2 my-sm-0 mr-2" type="submit">Add Book and Review</a>
             <a href="/logout" class="btn btn-light my-2 my-sm-0" type="submit">Logout</a>
         </nav>
         <div class="row">
             <div class="col-sm-12">
-                <h1>Welcome, you've been logged in!</h1>
+                <h1 class="display-4">Welcome, {{request.session.first_name}}!</h1>
             </div>
         </div>
         <div class="row">
             <div class="col-sm-12"></div>
+        </div>
+        <div class="row">
+            <div class="col-sm-8 border-right p-2">
+                <h3 class="mb-3">Recent Book Reviews</h3>
+                    <!-- Start of the book card -->
+                    {% for review in reviews reversed %}
+                    <div class="card mr-2 mb-3">
+                        <div class="card-header">{{review.related_book.name}}<a href="/books/{{review.related_book.id}}" type="button" class="btn btn-primary btn-sm float-right">Visit Book Page</a></div>
+                        <div class="card-body">
+                            {% if review.ratings == 5%}
+                            <p>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                            </p>
+                            {% endif %}
+                            {% if review.ratings == 4%}
+                            <p>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star_border</i>
+                            </p>
+                            {% endif %}
+                            {% if review.ratings == 3%}
+                            <p>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star_border</i>
+                                <i class="material-icons">star_border</i>
+                            </p>
+                            {% endif %}
+                            {% if review.ratings == 2%}
+                            <p>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star_border</i>
+                                <i class="material-icons">star_border</i>
+                                <i class="material-icons">star_border</i>
+                            </p>
+                            {% endif %}
+                            {% if review.ratings == 1%}
+                            <p>
+                                <i class="material-icons">star</i>
+                                <i class="material-icons">star_border</i>
+                                <i class="material-icons">star_border</i>
+                                <i class="material-icons">star_border</i>
+                                <i class="material-icons">star_border</i>
+                            </p>
+                            {% endif %}
+                            <p class="card-text"><a href="/users/{{review.commentator.id}}">{{review.commentator.first_name}}</a> says: "{{review.content}}"</p>
+                            <small class="text-muted">Posted on {{review.created_at}}</small>
+                        </div>
+                    </div>
+                    {% endfor %}
+                    <!-- End of book card -->
+            </div>
+            <div class="col-sm-4 p-2">
+                <h5 class="mb-3 ml-2">Other books with reviews</h5>
+                <ul class="list-group">
+                    {% for book in books %}
+                    <li class="list-group-item"><a href="/books/{{book.id}}">{{book.name}}</a></li>
+                    {% endfor %}
+                </ul>
+            </div>
         </div>
     </div>
 </body>

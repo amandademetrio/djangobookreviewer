@@ -2,9 +2,16 @@ from django.conf.urls import url
 from . import views
 
 urlpatterns = [
-    url(r'^$', views.index), #Main route to load index.html
-    url(r'sucess$', views.sucess), #Route to load the sucess.html page
-    url(r'processregistration$', views.registration), #post route for registration
-    url(r'logout$', views.logout), #route to logout
-    url(r'login$', views.login) #post route for login
+    #Routes to render templates
+    url(r'^$', views.index),
+    url(r'books/add$', views.addbook),
+    url(r'books/(?P<number>[0-9]+)$', views.loadbook),
+    url(r'users/(?P<number>[0-9]+)$', views.loaduser),
+
+    #Routes to process and redirect
+    url(r'processregistration$', views.registration),
+    url(r'logout$', views.logout),
+    url(r'login$', views.login),
+    url(r'processaddbook$', views.processaddbook),
+    url(r'processaddreview$', views.processaddreview)
 ] 

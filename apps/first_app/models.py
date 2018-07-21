@@ -15,8 +15,9 @@ class UserManager(models.Manager):
             errors['last_name_len'] = "Last name should have at least 2 characters"
         if len(postData['email']) < 2:
             errors['email_len'] = "Email should have at least 2 characters"
-        if len(postData['password']) < 2:
-            errors['password_len'] = "Password should have at least 2 characters"
+            #In the book reviewer, password has to be at least 8 characters long
+        if len(postData['password']) < 8:
+            errors['password_len'] = "Password should have at least 8 characters"
         #Making sure names are only letters
         if not postData['first_name'].isalpha():
             errors['first_name_alpha'] = "First name must contain only letters"
@@ -30,7 +31,7 @@ class UserManager(models.Manager):
             errors['already_registered'] = "Email is already in the database"
         #Making sure both passwords match
         if postData['password'] != postData['confirm_password']:
-            errors['password_match'] = "Both passwords match"
+            errors['password_match'] = "Both passwords need to  match"
         return errors
     
     def login_validator(self,postData):
@@ -60,3 +61,46 @@ class User(models.Model):
     created_at = models.DateTimeField(auto_now_add = True)
     updated_at = models.DateTimeField(auto_now = True)
     objects = UserManager()
+
+class Author(models.Model):
+    name = models.CharField(max_length=255)
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+
+class BookManager(models.Manager):
+    def book_validator(self,postData):
+        errors = {}
+        #Checking for length in book title and book author
+        if len(postData['new_title']) < 2:
+            errors['book_title_len'] = "Book Title should have at least 2 characters"
+        if postData['regular_author'] == "add":
+            if len(postData['new_author']) < 2:
+                errors['book_author_len'] = "Book author name should have at least 2 characters"
+        if len(postData['book_review']) < 10:
+            errors['review_len'] = "Review shouldhave at least 10 characters"
+        return errors
+
+
+class Book(models.Model):
+    name = models.CharField(max_length=255)
+    author = models.ForeignKey(Author, related_name="authored_books")
+    uploader = models.ForeignKey(User, related_name="user_list_of_uploaded_books")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    objects = BookManager()
+
+class ReviewManager(models.Manager):
+    def review_validator(self,postData):
+        errors = {}
+        if len(postData['book_review']) < 2:
+            errors['book_review_len'] = "Book Review should have at least 2 characters"
+        return errors
+
+class Review(models.Model):
+    content = models.TextField()
+    commentator = models.ForeignKey(User, related_name="user_list_of_reviews")
+    created_at = models.DateTimeField(auto_now_add = True)
+    updated_at = models.DateTimeField(auto_now = True)
+    related_book = models.ForeignKey(Book, related_name="reviews_for_book")
+    ratings = models.IntegerField()
+    objects = ReviewManager()

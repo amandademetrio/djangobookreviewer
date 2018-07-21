@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Book Reviews</title>
+    <!-- Botstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#"><img src="{% static 'first_app/images/summer.png' %}" alt="Website Logo" id="website_logo"/>
+            <span class="ml-3">The Book Reviewer</span></a>
+            <ul class="navbar-nav mr-auto"></ul>
+            <a href="/" class="btn btn-light my-2 my-sm-0 mr-2" type="submit">Home</a>
+            <a href="/books/add" class="btn btn-light my-2 my-sm-0 mr-2" type="submit">Add Book and Review</a>
+            <a href="/logout" class="btn btn-light my-2 my-sm-0" type="submit">Logout</a>
+        </nav>
+
+        <div class="row">
+            <div class="col-sm-5">
+                <h3 class="display-4">User: {{request.session.first_name}}</h3>
+                <ul class="list-group">
+                    <li class="list-group-item">Name: {{request.session.first_name}} {{request.session.last_name}}</li>
+                    <li class="list-group-item">Email: {{request.session.email}}</li>
+                    <li class="list-group-item">Total Reviews: {{count}}</li>
+                </ul>
+            </div>
+            <div class="col-sm-7">
+                <div class="card">
+                    <div class="card-body">
+                    <h5>Posted Reviews on the following books</h5>
+                    <ul class="list-group list-group-flush">
+                        {% for review in reviews %}
+                        <li class="list-group-item"><a href="/books/{{review.related_book.id}}">{{review.related_book.name}}</a></li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+</body>
+</html>

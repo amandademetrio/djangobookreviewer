@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <title>Book Reviews</title>
+    <!-- Botstrap -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+    {% load staticfiles %}
+    <link rel="stylesheet" type="text/css" href="{% static 'first_app/css/styles.css' %}" />
+    <!-- Adding Google's icon library -->
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons"
+      rel="stylesheet">
+</head>
+<body>
+    <div class="container">
+        <!-- Navbar -->
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <a class="navbar-brand" href="#"><img src="{% static 'first_app/images/summer.png' %}" alt="Website Logo" id="website_logo"/>
+            <span class="ml-3">The Book Reviewer</span></a>
+            <ul class="navbar-nav mr-auto"></ul>
+            <a href="/" class="btn btn-light my-2 my-sm-0 mr-2" type="submit">Home</a>
+            <a href="/logout" class="btn btn-light my-2 my-sm-0" type="submit">Logout</a>
+        </nav>
+        <div class="row">
+            <div class="col-sm-12">
+                <h3>Add a book and a review</h3>
+                {% if messages %}
+                    {% for message in messages %}
+                        <p class="red">{{ message }}</p>
+                    {% endfor %}
+                {% endif %}
+                <form action='/processaddbook' method='post'>
+                    {% csrf_token %}
+                    <div class="form-group">
+                        <h6>Book Title</h6>
+                        <input type="text" class="form-control form-control-lg mx-2" name="new_title">
+                    </div>
+                    <div class="form-group">
+                        <h6>Author</h6>
+                            <div class="form-group form-inline">
+                            <label>Choose from a list:</label>
+                            <select name="regular_author" class="form-control mx-2">
+                                <option value=""></option>
+                                {% for author in authors %}
+                                <option value="{{author.name}}">{{author.name}}</option>
+                                {% endfor %}
+                            </select>
+                            <div class="form-group form-inline mx-2">
+                                <label>Or add a new author:</label>
+                                    <input type="text" class="form-control mx-2" name="new_author">
+                                </div>
+                            </div>
+                    </div>
+                    <div class="form-group">
+                        <h6>Review</h6>
+                        <textarea class="form-control" name="book_review" rows="3"></textarea>
+                    </div>
+                    <div class="form-group form-inline">
+                        <h6>Rating (in stars)</h6>
+                        <select class="form-control mx-2" name="ratings">
+                            <option>1</option>
+                            <option>2</option>
+                            <option>3</option>
+                            <option>4</option>
+                            <option>5</option>
+                        </select>
+                    </div>
+                    <input type="submit" value="Add Book and Review" class="btn btn-primary float-right">
+                </form>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
